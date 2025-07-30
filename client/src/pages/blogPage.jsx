@@ -36,6 +36,14 @@ const BlogPage = () => {
             className="w-full h-full object-cover rounded-sm"
           />
           <h1 className="text-2xl font-bold">{blog.title}</h1>
+          <Button
+                        variant="secondary"
+                        size="lg"
+                        className="rounded-full text-lg px-4 py-1  hover:bg-muted/80 bg-amber-300 text-black"
+                       
+                      >
+                        <Link to={blog.link}>Link of project</Link>
+                      </Button>
           <div className="text-base leading-relaxed">
             <ReactMarkdown>{blog.description}</ReactMarkdown>
           </div>
