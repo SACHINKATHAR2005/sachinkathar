@@ -7,12 +7,13 @@ import ProtectedRoute from './components/protedtedRoute/Index'
 import AdminDashboard from './components/admin-component/dashboard/Index'
 import { authContext } from './context/context'
 import { useContext } from 'react'
-import AdminLayoutPage from './components/admin-component/adminLayout/laout'
+
 
 import AdminCertificatePage from './components/admin-component/pages/certificate'
 import AdminBlogPage from './components/admin-component/pages/blog'
 import AdminProfilePage from './components/admin-component/pages/profile'
 import ProjectPage from './components/admin-component/pages/project'
+import AdminLayoutPage from './components/admin-component/adminLayout/Laout'
 
 
 function App() {
