@@ -1,6 +1,75 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Github, ArrowUpRight } from "lucide-react";
+import {
+  FaReact,
+  FaNodeJs,
+  FaDocker,
+  FaJava,
+  FaAws,
+  FaPython,
+  FaHtml5,
+  FaCss3,
+  FaGitAlt,
+  FaGithub,
+  FaGitlab,
+  FaNpm,
+  FaYarn,
+  FaJenkins,
+} from "react-icons/fa";
+import {
+  SiMongodb,
+  SiRedux,
+  SiTypescript,
+  SiJavascript,
+  SiTailwindcss,
+  SiExpress,
+  SiPostgresql,
+  SiFirebase,
+  SiGraphql,
+  SiVercel,
+  SiNetlify,
+  SiNextdotjs,
+  SiCplusplus,
+  SiMysql,
+  SiRedis,
+  SiRailway,
+} from "react-icons/si";
+
+const techIcons = {
+  react: <FaReact />,
+  nodejs: <FaNodeJs />,
+  express: <SiExpress />,
+  mongodb: <SiMongodb />,
+  docker: <FaDocker />,
+  redux: <SiRedux />,
+  typescript: <SiTypescript />,
+  javascript: <SiJavascript />,
+  tailwind: <SiTailwindcss />,
+  tailwindcss: <SiTailwindcss />,
+  java: <FaJava />,
+  python: <FaPython />,
+  html: <FaHtml5 />,
+  css: <FaCss3 />,
+  git: <FaGitAlt />,
+  github: <FaGithub />,
+  gitlab: <FaGitlab />,
+  npm: <FaNpm />,
+  yarn: <FaYarn />,
+  jenkins: <FaJenkins />,
+  aws: <FaAws />,
+  postgresql: <SiPostgresql />,
+  firebase: <SiFirebase />,
+  graphql: <SiGraphql />,
+  vercel: <SiVercel />,
+  netlify: <SiNetlify />,
+  nextjs: <SiNextdotjs />,
+  cpp: <SiCplusplus />,
+  mysql: <SiMysql />,
+  redis: <SiRedis />,
+  railway: <SiRailway />,
+};
 
 const ProjectGallery = ({ projects }) => {
   const [filter, setFilter] = useState("All");
@@ -11,17 +80,18 @@ const ProjectGallery = ({ projects }) => {
   });
 
   return (
-    <Tabs defaultValue="All" className="w-full border-none shadow-none">
-      <TabsList className="flex-wrap gap-4 mb-6 mt-5 border rounded-xl  bg-white">
-        <TabsTrigger value="All" onClick={() => setFilter("All")} className='border rounded-xl p-3 bg-gray-400'>
-          All
-        </TabsTrigger>
-        <TabsTrigger value="Project" onClick={() => setFilter("Project")} className='border rounded-xl p-3 bg-gray-400'>
-          Projects
-        </TabsTrigger>
-        <TabsTrigger value="Internship" onClick={() => setFilter("Internship")} className='border rounded-xl p-3 bg-gray-400'>
-          Internships
-        </TabsTrigger>
+    <Tabs defaultValue="All" className="w-full">
+      <TabsList className="flex-wrap gap-4 mb-6 mt-5 border rounded-xl bg-white">
+        {["All", "Project", "Internship"].map((tab) => (
+          <TabsTrigger
+            key={tab}
+            value={tab}
+            onClick={() => setFilter(tab)}
+            className="border rounded-xl p-3 bg-gray-400"
+          >
+            {tab}
+          </TabsTrigger>
+        ))}
       </TabsList>
 
       <TabsContent value={filter}>
@@ -29,57 +99,64 @@ const ProjectGallery = ({ projects }) => {
           {filter === "All" ? "All Works" : filter}
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-6">
           {filteredProjects?.length > 0 ? (
             filteredProjects.map((item, index) => (
-              <Card key={index} >
-                <CardContent className="p-4">
+              <div key={index} className="w-full p-0 m-0">
+                <div className="w-full p-4 border-b border-border rounded-none">
                   {item.image && (
                     <img
                       src={item.image}
                       alt="thumbnail"
-                      className="rounded-xl mb-3 w-full h-48 object-cover"
+                      className="w-full h-auto object-cover mb-4 rounded-none"
                     />
                   )}
 
-                  <h2 className="text-lg font-semibold mb-1">{item.title}</h2>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {item.description}
-                  </p>
+                  <h2 className="text-xl font-semibold mb-1">{item.title}</h2>
+                  <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
 
-                  {/* Internship-specific info */}
-                  {item.category?.toLowerCase() === "internship" && item.company && (
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Internship at {item.company}{" "}
-                      {item.duration && `(${item.duration})`}
-                    </p>
-                  )}
+                  {item.category?.toLowerCase() === "internship" &&
+                    item.company && (
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Internship at {item.company}{" "}
+                        {item.duration && `(${item.duration})`}
+                      </p>
+                    )}
 
-                  {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-2 text-xs mb-3">
+                  {/* Tech stack with icons */}
+                  <div className="flex flex-wrap gap-2 text-sm mb-3 items-center">
                     {(typeof item.techStack[0] === "string"
                       ? item.techStack[0].split(",")
                       : item.techStack
-                    ).map((tech, i) => (
-                      <span
-                        key={i}
-                        className="bg-muted px-2 py-1 rounded-md dark:bg-zinc-800"
-                      >
-                        {tech.trim()}
-                      </span>
-                    ))}
+                    ).map((tech, i) => {
+                      const key = tech.trim().toLowerCase();
+                      return (
+                        <span
+                          key={i}
+                          className="flex items-center gap-1 border px-2 py-1 rounded bg-muted dark:bg-zinc-800"
+                        >
+                          {techIcons[key] || null}
+                          <span>{tech.trim()}</span>
+                        </span>
+                      );
+                    })}
                   </div>
 
-                  {/* Links */}
-                  <div className="flex gap-4 text-sm">
+                  {/* Buttons */}
+                  <div className="flex gap-4 text-sm mt-4 flex-wrap">
                     {item.github && (
                       <a
                         href={item.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
                       >
-                        GitHub
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-semibold text-sm border-gray-500 text-gray-500 p-4"
+                        >
+                          <Github size={18} className="mr-2" />
+                          GitHub
+                        </Button>
                       </a>
                     )}
                     {item.link && (
@@ -87,14 +164,34 @@ const ProjectGallery = ({ projects }) => {
                         href={item.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
                       >
-                        Live
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-semibold text-sm border-gray-500 text-gray-500 p-4"
+                        >
+                          <ArrowUpRight size={18} className="mr-2" />
+                          Live
+                        </Button>
+                      </a>
+                    )}
+                    {item.blog && (
+                      <a
+                        href={item.blog}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-semibold text-sm border-gray-500 text-gray-500 p-4"
+                        >
+                          <ArrowUpRight size={18} className="mr-2" />
+                          Blog
+                        </Button>
                       </a>
                     )}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))
           ) : (
             <p>No {filter.toLowerCase()} found.</p>
@@ -106,4 +203,3 @@ const ProjectGallery = ({ projects }) => {
 };
 
 export default ProjectGallery;
- 

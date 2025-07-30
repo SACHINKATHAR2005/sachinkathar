@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom"; // 🧭 for routing
+import { Link, useNavigate } from "react-router-dom"; // 🧭 for routing
+import { Button } from "../ui/button";
 
 export const BlogGallery = ({ blogs }) => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export const BlogGallery = ({ blogs }) => {
         <Card
           key={blog._id}
           className="group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
-          onClick={() => navigate(`/blog/${blog._id}`)} 
+          onClick={() => navigate(`/blog/${blog._id}`)}
         >
           <CardContent className="p-4">
             <div className="relative overflow-hidden rounded-md">
@@ -32,7 +33,16 @@ export const BlogGallery = ({ blogs }) => {
             </p>
 
             {/* Optional: Show blog ID for dev/debug/access */}
-            <p className="text-xs text-gray-500">ID: {blog._id}</p>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              className="rounded-full text-xs px-4 py-1 bg-muted text-muted-foreground hover:bg-muted/80"
+             
+            >
+              <Link to={blog.link}>Link of project</Link>
+            </Button>
+
           </CardContent>
         </Card>
       ))}

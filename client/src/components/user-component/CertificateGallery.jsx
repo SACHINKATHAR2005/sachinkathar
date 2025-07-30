@@ -26,14 +26,14 @@ export const CertificateGallery = ({ certificates }) => {
             </div>
 
             <h4 className="text-lg font-semibold mb-1 mt-3">{cert.title}</h4>
-            <p className="text-sm text-muted-foreground mb-2">{cert.description}</p>
+            <p className="text-lg text-muted-foreground mb-2">{cert.description}</p>
             {cert.issuer && (
-              <p className="text-xs text-gray-500 mb-2">Issued by: {cert.issuer}</p>
+              <p className="text-lg text-gray-500 mb-2 font-semibold">Issued by: {cert.issuer}</p>
             )}
             <div className="flex flex-wrap gap-2 mt-2">
               {cert.category && <Badge>{cert.category}</Badge>}
               {cert.date && (
-                <Badge variant="outline">
+                <Badge variant="outline" className="text-xs bg-muted font-medium p-2 rounded-md">
                   {new Date(cert.date).toLocaleDateString("en-IN")}
                 </Badge>
               )}

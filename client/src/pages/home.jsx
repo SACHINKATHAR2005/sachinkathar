@@ -43,9 +43,9 @@ export default function HomePage() {
             <ScrollArea className="md:w-[70%] w-full h-screen overflow-y-auto px-6 md:px-10 py-6 space-y-6">
                 {/* Top controls */}
                 <div className="flex justify-end md:justify-start items-center gap-4 mb-4">
-                    <Button variant="ghost" onClick={toggleTheme} className="rounded-full ">
+                    {/* <Button variant="ghost" onClick={toggleTheme} className="rounded-full ">
                         {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                    </Button>
+                    </Button> */}
                     <Button variant="outline" disabled className="rounded-full p-4 font-semibold text-sm border-y-amber-300 text-gray-500">
                         <Mail size={18} className="mr-2" /> katharsachin95@gmail.com
                     </Button>
