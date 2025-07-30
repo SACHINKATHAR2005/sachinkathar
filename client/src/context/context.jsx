@@ -81,15 +81,23 @@ const loginUser = async (formdata)=>{
 }
 
 const authMe = async () => {
-  const res = await axiosInstance.get("/user/me",{
+  try {
+    const res = await axiosInstance.get("/user/me",{
     withCredentials:true
   });
   console.log(res?.data?.user);
-
-  setAdmin({
+  if(res?.data?.success){
+     setAdmin({
     authnticated: true,
     user: res?.data?.user, 
   });
+  }
+
+ 
+    
+  } catch (error) {
+    console.error('got error while login in',error);
+  }
 };
 
 // useEffect(() => {
