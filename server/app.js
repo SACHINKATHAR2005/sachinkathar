@@ -17,7 +17,7 @@ const app = express();
 
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  "http://localhost:3000",
   "https://sachinkathar.vercel.app",
 ];
 
@@ -50,6 +50,6 @@ app.use("/dsa",leetCodeRouter)
 
 connectDB();
 
-app.listen(3000, () => {
+app.listen(5000, () => {
   console.log("Server is running on port 3000");
 });

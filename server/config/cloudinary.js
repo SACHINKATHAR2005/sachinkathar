@@ -15,7 +15,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "uploads", // optional folder in Cloudinary
     allowed_formats: ["jpg", "png", "jpeg", "pdf"], // adjust as needed
-    transformation: [{ width: 800, height: 800, crop: "limit" }], // optional
+    resource_type: 'auto', // allow images and PDFs
   },
 });
 

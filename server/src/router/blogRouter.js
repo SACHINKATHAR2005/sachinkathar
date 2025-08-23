@@ -20,3 +20,4 @@ Router.get("/get/:id",getSingleBlog);
 Router.delete("/delete/:id",authenticateUser,authorizeAdmin,deleteBlog);
 // http://localhost:3000/blog/delete/:id
 export default Router;
+

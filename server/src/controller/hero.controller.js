@@ -1,5 +1,6 @@
 import Message from "../model/contect/index.js";
 import Hero from "../model/hero/index.js";
+import axios from "axios";
 
 // ✅ CREATE - Add Hero
 export const addHero = async (req, res) => {
@@ -94,6 +95,24 @@ export const getAllHeroes = async (req, res) => {
       success: false,
       error: error.message,
     });
+  }
+};
+
+// ✅ DOWNLOAD - Stream latest hero resume as attachment
+export const downloadResume = async (req, res) => {
+  try {
+    const hero = await Hero.findOne().sort({ createdAt: -1 });
+    const resumeUrl = hero?.resume?.url;
+    if (!resumeUrl) {
+      return res.status(404).json({ message: "Resume not found", success: false });
+    }
+    const filename = `${hero?.name || 'resume'}.pdf`;
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/pdf');
+    const response = await axios.get(resumeUrl, { responseType: 'stream' });
+    response.data.pipe(res);
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to download resume", success: false, error: error.message });
   }
 };
 
@@ -215,6 +234,8 @@ export const deleteHeroTitle = async (req, res) => {
     });
   }
 };
+
+// (duplicate definition removed)
 
 export const contectInfo = async(req,res)=>{
   try {

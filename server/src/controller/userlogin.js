@@ -69,8 +69,8 @@ export const userLogin = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // true in production
-      sameSite: "Lax",
+      secure: true, // Render serves over HTTPS
+      sameSite: "None", // allow cross-site cookie from localhost:3000
       maxAge: 60 * 60 * 1000,
     });
 

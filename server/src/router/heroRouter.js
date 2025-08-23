@@ -6,6 +6,7 @@ import express from "express";import {
   deleteHero,
   deleteHeroTitle,
   contectInfo,
+  downloadResume,
 } from "../controller/hero.controller.js";
 
 import { authenticateUser, authorizeAdmin } from "../middleware/authMiddleware.js";
@@ -31,6 +32,9 @@ Router.patch("/patch/remove-title",authenticateUser,authorizeAdmin, deleteHeroTi
 
   Router.post("/contect",contectInfo);
 
+// Public download endpoint (latest hero)
+Router.get('/resume/download', downloadResume);
+
 export default Router;
 
 
@@ -50,3 +54,6 @@ export default Router;
 //http://localhost:3000/hero/upload/:id            -admin
 //http://localhost:3000/hero/delete/:id         -admin
 //http://localhost:3000/hero/patch/remove-title   -admin 
+
+
+

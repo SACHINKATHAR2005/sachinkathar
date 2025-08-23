@@ -22,3 +22,5 @@ Router.delete("/delete/:id",authenticateUser,authorizeAdmin,deleteCertificate);
 
 
 export default Router;
+
+

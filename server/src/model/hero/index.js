@@ -32,7 +32,8 @@ const heroSchema = new mongoose.Schema({
     github: { type: String },
     linkedin: { type: String },
     twitter: { type: String },
-    portfolio: { type: String }, // optional portfolio link
+    portfolio: { type: String },
+    email:{type: String }
   },
 }, {
   timestamps: true

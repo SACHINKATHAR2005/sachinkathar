@@ -16,3 +16,4 @@ Router.get("/get/:id",authenticateUser,authorizeAdmin,getSingleProject);
 Router.delete("/delete/:id",authenticateUser,authorizeAdmin,deleteProject);
 // http://localhost:3000/project/delete/:id
 export default Router;
+
