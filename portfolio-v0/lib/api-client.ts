@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from './store/auth-store'
 
 // Use env to switch between local and production
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000' // https://sachinkathar.onrender.com
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sachinkathar.onrender.com' // https://sachinkathar.onrender.com
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
