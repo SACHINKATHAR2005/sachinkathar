@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/lib/store/auth-store'
-import { LayoutDashboard, FolderOpen, FileText, Award, User, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, FolderOpen, FileText, Award, User, LogOut, Menu, X, BadgeCheck, Mail } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
@@ -16,7 +16,9 @@ const sidebarItems = [
   { href: '/admin/projects', label: 'Projects', icon: FolderOpen },
   { href: '/admin/blogs', label: 'Blogs', icon: FileText },
   { href: '/admin/certificates', label: 'Certificates', icon: Award },
+  { href: '/admin/skills', label: 'Skills', icon: BadgeCheck },
   { href: '/admin/bio', label: 'Bio', icon: User },
+  { href: '/admin/contacts', label: 'Contacts', icon: Mail },
 ]
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -33,10 +35,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return
-    if (!isAuthenticated) {
+    if (!isAuthenticated || user?.role !== 'admin') {
       router.push('/auth/login')
     }
-  }, [hydrated, isAuthenticated, router])
+  }, [hydrated, isAuthenticated, user?.role, router])
 
   const handleLogout = () => {
     logout()
@@ -47,7 +49,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     return null
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || user?.role !== 'admin') {
     return null
   }
 

@@ -82,7 +82,7 @@ export default function ProjectsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
-                <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+                <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg rounded-lg bg-white dark:bg-neutral-900">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <Image
                       src={project.image || `/placeholder.svg?height=300&width=400&query=${project.title}`}
@@ -114,14 +114,14 @@ export default function ProjectsPage() {
                   </div>
                   <CardHeader>
                     <CardTitle className="font-playfair">{project.title}</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
+                    <CardDescription className="dark:text-gray-300">{project.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
                       {project.techStack?.map((tech) => (
                         <span
                           key={tech}
-                          className="px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full"
+                          className="px-3 py-1 bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-200 text-sm rounded-full"
                         >
                           {tech}
                         </span>

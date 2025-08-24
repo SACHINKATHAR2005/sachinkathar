@@ -44,7 +44,8 @@ export interface Hero {
   name: string;
   titles?: string[];
   about: string;
-  education?: string;
+  education?: string; // legacy single-field
+  educations?: EducationEntry[]; // structured entries
   avatar? :string,
   location?: string;
   resume?: {
@@ -55,9 +56,24 @@ export interface Hero {
     github?: string;
     linkedin?: string;
     email?: string;
+    x?: string;
+    instagram?: string;
   };
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface EducationEntry {
+  _id?: string
+  institute: string
+  logo?: string
+  mode?: 'Online' | 'Offline'
+  degree?: string
+  stream?: string
+  startYear?: string
+  endYear?: string
+  tags?: string[]
+  url?: string
 }
 
 export interface User {
@@ -65,4 +81,14 @@ export interface User {
   email: string
   name: string
   role?: string
+}
+
+// Skills
+export interface Skill {
+  _id: string
+  name: string
+  icon?: string
+  category: string
+  createdAt?: string
+  updatedAt?: string
 }

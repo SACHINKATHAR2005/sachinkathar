@@ -13,6 +13,8 @@ import projectRouter from "./src/router/projectRouter.js";
 import certificateRouter from "./src/router/certificateRouter.js";
 import blogRouter from "./src/router/blogRouter.js";
 import leetCodeRouter from "./src/router/leetcode.route.js"
+import contactRouter from "./src/router/contect.router.js"
+import uploadRouter from "./src/router/upload.router.js"
 const app = express();
 
 
@@ -46,10 +48,12 @@ app.use("/project",projectRouter);
 app.use("/certificate",certificateRouter);
 app.use("/blog",blogRouter);
 app.use("/dsa",leetCodeRouter)
+app.use("/contact", contactRouter)
+app.use("/upload", uploadRouter)
 
 
 connectDB();
 
 app.listen(5000, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port 5000");
 });

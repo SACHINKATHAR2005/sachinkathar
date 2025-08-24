@@ -26,6 +26,12 @@
   .text-balance {
     text-wrap: balance;
   }
+  /* simple marquee for music title */
+  .marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 12s linear infinite;
+  }
 }
 
 /* Custom scrollbar */
@@ -44,4 +50,9 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #333;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
 }

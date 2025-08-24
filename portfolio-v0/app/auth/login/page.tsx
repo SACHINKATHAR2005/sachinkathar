@@ -42,6 +42,7 @@ export default function LoginPage() {
           id: me._id || me.id || '',
           email: me.email || formData.email,
           name: me.name || (me.email ? me.email.split('@')[0] : 'Admin'),
+          role: me.role || (Array.isArray(me.roles) ? me.roles[0] : undefined),
         })
       }
 

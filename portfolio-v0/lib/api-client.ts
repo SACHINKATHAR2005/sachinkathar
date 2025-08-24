@@ -1,8 +1,24 @@
 import axios from 'axios'
 import { useAuthStore } from './store/auth-store'
 
-// Use env to switch between local and production
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sachinkathar.onrender.com' // https://sachinkathar.onrender.com
+// Determine base URL
+const RENDER_PROD_URL = 'https://sachinkathar.onrender.com'
+function resolveBaseUrl() {
+  // Highest priority: explicit env override
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL
+
+  // Client-side: decide by hostname
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname
+    const isLocal = host === 'localhost' || host === '127.0.0.1'
+    return isLocal ? 'http://localhost:5000' : RENDER_PROD_URL
+  }
+
+  // Server-side: use NODE_ENV
+  return process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : RENDER_PROD_URL
+}
+
+export const API_BASE_URL = resolveBaseUrl()
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -93,11 +109,38 @@ export const api = {
     delete: (id: string) => apiClient.delete(`/certificate/delete/${id}`)
   },
 
+  // Skill endpoints
+  skill: {
+    getAll: () => apiClient.get('/skill/get'),
+    create: (data: FormData) => apiClient.post('/skill/create', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    update: (id: string, data: FormData) => apiClient.put(`/skill/update/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    delete: (id: string) => apiClient.delete(`/skill/delete/${id}`)
+  },
+
   // User/Auth endpoints
   user: {
     login: (credentials: { email: string; password: string }) => 
       apiClient.post('/user/login', credentials),
     create: (userData: any) => apiClient.post('/user/create', userData),
     me: () => apiClient.get('/user/me')
+  },
+
+  // Contact endpoints
+  contact: {
+    create: (payload: { name: string; email: string; subject?: string; message: string }) =>
+      apiClient.post('/contact/create', payload),
+    getAll: () => apiClient.get('/contact/get'),
+    delete: (id: string) => apiClient.delete(`/contact/delete/${id}`)
+  },
+
+  // Upload endpoints-
+  upload: {
+    image: (data: FormData) => apiClient.post('/upload/image', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
   }
 }

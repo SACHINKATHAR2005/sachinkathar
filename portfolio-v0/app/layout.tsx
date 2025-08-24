@@ -25,8 +25,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="bg-white text-black antialiased">
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Apply theme before paint to avoid flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            (function(){
+              try {
+                var stored = localStorage.getItem('theme');
+                var dark = stored ? stored === 'dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if(dark){ document.documentElement.classList.add('dark'); }
+                var lm = localStorage.getItem('listMode') === 'true';
+                document.documentElement.setAttribute('data-list-mode', lm ? 'list' : 'grid');
+              } catch(e) {}
+            })();
+          `}}
+        />
+      </head>
+      <body className="antialiased bg-white text-black dark:bg-neutral-950 dark:text-white">
         {children}
         <Toaster position="top-right" />
       </body>

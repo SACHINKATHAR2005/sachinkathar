@@ -81,7 +81,7 @@ export default function BlogsPage() {
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
                 <Link href={`/blogs/${blog._id}`} className="block">
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-0 shadow-lg rounded-lg bg-white dark:bg-neutral-900">
                   <div className="md:flex">
                     <div className="md:w-1/3">
                       <Image
@@ -104,7 +104,7 @@ export default function BlogsPage() {
                         <CardTitle className="font-playfair text-2xl mb-3">
                           {blog.title}
                         </CardTitle>
-                        <CardDescription className="text-base leading-relaxed">
+                        <CardDescription className="text-base leading-relaxed dark:text-gray-300">
                           {blog.description?.substring(0, 200)}{blog.description && blog.description.length > 200 ? '...' : ''}
                         </CardDescription>
                       </CardHeader>

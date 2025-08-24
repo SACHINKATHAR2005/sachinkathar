@@ -2,7 +2,7 @@ import Message from "../model/contect/index.js";
 import Hero from "../model/hero/index.js";
 import axios from "axios";
 
-// ✅ CREATE - Add Hero
+// CREATE - Add Hero
 export const addHero = async (req, res) => {
   try {
     const {
@@ -15,11 +15,11 @@ export const addHero = async (req, res) => {
       socialLinks,
     } = req.body;
 
-
     const resume = {
-    url: req.file?.path,
-    publicId: req.file?.filename,
-};
+      url: req.file?.path,
+      publicId: req.file?.filename,
+    };
+
     // if (!name || !titles || !Array.isArray(titles)) {
     //   return res.status(400).json({
     //     message: "Name and titles are required, and titles must be an array.",
@@ -27,11 +27,22 @@ export const addHero = async (req, res) => {
     //   });
     // }
 
+    // Parse structured educations if provided (stringified JSON allowed)
+    let educations;
+    if (req.body.educations) {
+      try {
+        educations = typeof req.body.educations === 'string' ? JSON.parse(req.body.educations) : req.body.educations;
+      } catch (e) {
+        return res.status(400).json({ message: 'Invalid educations format. Must be JSON.', success: false });
+      }
+    }
+
     const hero = new Hero({
       name,
       titles,
       about,
       education,
+      ...(educations ? { educations } : {}),
       resume,
       profileImage,
       location,
@@ -54,7 +65,7 @@ export const addHero = async (req, res) => {
   }
 };
 
-// ✅ GET - Fetch Latest Hero
+// GET - Fetch Latest Hero
 export const getHero = async (req, res) => {
   try {
     const hero = await Hero.findOne().sort({ createdAt: -1 });
@@ -80,7 +91,7 @@ export const getHero = async (req, res) => {
   }
 };
 
-// ✅ GET - Fetch All Heroes
+// GET - Fetch All Heroes
 export const getAllHeroes = async (req, res) => {
   try {
     const heroes = await Hero.find().sort({ createdAt: -1 });
@@ -98,7 +109,7 @@ export const getAllHeroes = async (req, res) => {
   }
 };
 
-// ✅ DOWNLOAD - Stream latest hero resume as attachment
+// DOWNLOAD - Stream latest hero resume as attachment
 export const downloadResume = async (req, res) => {
   try {
     const hero = await Hero.findOne().sort({ createdAt: -1 });
@@ -116,7 +127,7 @@ export const downloadResume = async (req, res) => {
   }
 };
 
-// ✅ UPDATE - Update Hero
+// UPDATE - Update Hero
 export const updateHero = async (req, res) => {
   try {
     const {
@@ -138,6 +149,15 @@ export const updateHero = async (req, res) => {
     if (profileImage !== undefined) updateData.profileImage = profileImage;
     if (location !== undefined) updateData.location = location;
     if (socialLinks !== undefined) updateData.socialLinks = socialLinks;
+
+    // Parse structured educations if provided (stringified JSON allowed)
+    if (req.body.educations !== undefined) {
+      try {
+        updateData.educations = typeof req.body.educations === 'string' ? JSON.parse(req.body.educations) : req.body.educations;
+      } catch (e) {
+        return res.status(400).json({ message: 'Invalid educations format. Must be JSON.', success: false });
+      }
+    }
 
     // Handle resume file upload if provided
     if (req.file) {

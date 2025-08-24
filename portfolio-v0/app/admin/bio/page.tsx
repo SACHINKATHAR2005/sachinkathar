@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Upload, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { api } from '@/lib/api-client'
-import { Hero } from '@/lib/types'
+import { EducationEntry, Hero } from '@/lib/types'
 import { toast } from 'sonner'
 
 export default function AdminBioPage() {
@@ -28,6 +28,9 @@ export default function AdminBioPage() {
     linkedin: '',
     email: '',
   })
+  const [educations, setEducations] = useState<EducationEntry[]>([])
+  const [savingEdu, setSavingEdu] = useState(false)
+  const [eduUploading, setEduUploading] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
     fetchBio()
@@ -46,6 +49,56 @@ export default function AdminBioPage() {
     }
   }
 
+  const handleEduLogoFile = async (idx: number, file?: File | null) => {
+    if (!file) return
+    try {
+      setEduUploading(prev => ({ ...prev, [idx]: true }))
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await api.upload.image(fd)
+      const url: string = res.data?.url
+      if (url) {
+        updateEdu(idx, 'logo', url)
+        toast.success('Logo uploaded')
+      } else {
+        toast.error('Upload failed: no URL returned')
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to upload logo')
+    } finally {
+      setEduUploading(prev => ({ ...prev, [idx]: false }))
+    }
+  }
+
+  // Education editor helpers
+  const addEdu = () => {
+    setEducations(prev => ([...prev, { institute: '', mode: 'Offline', startYear: '', endYear: '', degree: '', stream: '', logo: '', url: '', tags: [] }]))
+  }
+  const removeEdu = (idx: number) => setEducations(prev => prev.filter((_, i) => i !== idx))
+  const updateEdu = (idx: number, field: keyof EducationEntry, value: any) =>
+    setEducations(prev => prev.map((e, i) => i === idx ? { ...e, [field]: value } : e))
+  const updateEduTags = (idx: number, value: string) =>
+    updateEdu(idx, 'tags', value.split(',').map(t => t.trim()).filter(Boolean))
+
+  const saveEducations = async () => {
+    if (!editing?._id) {
+      toast.error('Create the Bio first, then add education entries.')
+      return
+    }
+    setSavingEdu(true)
+    try {
+      const fd = new FormData()
+      fd.append('educations', JSON.stringify(educations))
+      await api.hero.upload(editing._id, fd)
+      toast.success('Education saved')
+      fetchBio()
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to save education')
+    } finally {
+      setSavingEdu(false)
+    }
+  }
+
   const fillForm = (h: Hero) => {
     setEditing(h)
     setFormData({
@@ -58,6 +111,7 @@ export default function AdminBioPage() {
       linkedin: h.socialLinks?.linkedin || '',
       email: h.socialLinks?.email || '',
     })
+    setEducations(h.educations || [])
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -212,6 +266,84 @@ export default function AdminBioPage() {
                 </div>
               </form>
             </motion.div>
+
+            {/* Education section inside Bio */}
+            <Card>
+              <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <CardTitle className="font-playfair">Education</CardTitle>
+                  <CardDescription>Manage structured college details</CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={addEdu}>Add Entry</Button>
+                  <Button onClick={saveEducations} disabled={savingEdu}>{savingEdu ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Saving</> : 'Save Education'}</Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {educations.length === 0 ? (
+                  <div className="py-8 text-center text-gray-600">No education entries yet.</div>
+                ) : (
+                  <div className="space-y-6">
+                    {educations.map((e, idx) => (
+                      <div key={idx} className="border rounded-lg p-4 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold">Entry {idx + 1}</h3>
+                          <Button variant="destructive" size="sm" onClick={() => removeEdu(idx)}>Remove</Button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Institute</label>
+                            <Input value={e.institute || ''} onChange={(ev) => updateEdu(idx, 'institute', ev.target.value)} />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Logo</label>
+                            <div className="space-y-2">
+                              <Input value={e.logo || ''} onChange={(ev) => updateEdu(idx, 'logo', ev.target.value)} placeholder="https://..." />
+                              <div className="flex items-center gap-2">
+                                <Input type="file" accept="image/*" onChange={(ev) => handleEduLogoFile(idx, ev.target.files?.[0] || null)} />
+                                {eduUploading[idx] && <Loader2 className="w-4 h-4 animate-spin" />}
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Institute URL</label>
+                            <Input placeholder="https://..." value={e.url || ''} onChange={(ev) => updateEdu(idx, 'url', ev.target.value)} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Mode</label>
+                            <Input value={e.mode || ''} onChange={(ev) => updateEdu(idx, 'mode', ev.target.value)} placeholder="Online/Offline" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Degree</label>
+                            <Input value={e.degree || ''} onChange={(ev) => updateEdu(idx, 'degree', ev.target.value)} />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Stream</label>
+                            <Input value={e.stream || ''} onChange={(ev) => updateEdu(idx, 'stream', ev.target.value)} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Start Year</label>
+                            <Input value={e.startYear || ''} onChange={(ev) => updateEdu(idx, 'startYear', ev.target.value)} />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">End Year</label>
+                            <Input value={e.endYear || ''} onChange={(ev) => updateEdu(idx, 'endYear', ev.target.value)} />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Tags (comma separated)</label>
+                            <Input value={(e.tags || []).join(', ')} onChange={(ev) => updateEduTags(idx, ev.target.value)} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {bios.length > 0 && (
               <Card>

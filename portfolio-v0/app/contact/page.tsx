@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react'
 import { toast } from 'sonner'
-import { api, apiClient } from '@/lib/api-client'
+import { api } from '@/lib/api-client'
 import {Hero} from '@/lib/types'
 
 export default function ContactPage() {
@@ -44,13 +44,15 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    toast.success('Message sent successfully!')
-    setFormData({ name: '', email: '', subject: '', message: '' })
-    setLoading(false)
+    try {
+      await api.contact.create(formData)
+      toast.success('Message sent successfully!')
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to send message')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -75,7 +77,7 @@ export default function ContactPage() {
             <h1 className="font-playfair text-5xl md:text-6xl font-bold mb-6">
               Get In Touch
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Have a project in mind or just want to chat? I'd love to hear from you. 
               Let's create something amazing together.
             </p>
@@ -88,10 +90,10 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <Card className="border-0 shadow-lg">
+              <Card className="border-0 shadow-lg rounded-lg bg-white dark:bg-neutral-900">
                 <CardHeader>
                   <CardTitle className="font-playfair text-2xl">Send a Message</CardTitle>
-                  <CardDescription>
+                  <CardDescription className="dark:text-gray-300">
                     Fill out the form below and I'll get back to you as soon as possible.
                   </CardDescription>
                 </CardHeader>
@@ -170,7 +172,7 @@ export default function ContactPage() {
             >
               <div>
                 <h2 className="font-playfair text-3xl font-bold mb-6">Let's Connect</h2>
-                <p className="text-gray-600 mb-8">
+                <p className="text-gray-600 dark:text-gray-300 mb-8">
                   I'm always open to discussing new opportunities, creative projects, 
                   or just having a friendly chat about technology and design.
                 </p>
@@ -184,7 +186,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold">Email</h3>
-                      <p className="text-gray-600">{hero?.socialLinks?.email}</p>
+                      <p className="text-gray-600 dark:text-gray-300">{hero?.socialLinks?.email}</p>
                     </div>
                   </div>
                 )}
@@ -195,7 +197,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Phone</h3>
-                    <p className="text-gray-600">Available on request</p>
+                    <p className="text-gray-600 dark:text-gray-300">Available on request</p>
                   </div>
                 </div>
 
@@ -205,7 +207,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Location</h3>
-                    <p className="text-gray-600">Remote / Available</p>
+                    <p className="text-gray-600 dark:text-gray-300">Remote / Available</p>
                   </div>
                 </div>
               </div>
@@ -215,17 +217,17 @@ export default function ContactPage() {
                   <h3 className="font-semibold mb-4">Follow Me</h3>
                   <div className="flex space-x-4">
                     {hero?.socialLinks?.github && (
-                      <a href={hero?.socialLinks?.github} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
+                      <a href={hero?.socialLinks?.github} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 dark:bg-neutral-800 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
                         <Github className="w-5 h-5" />
                       </a>
                     )}
                     {hero?.socialLinks?.linkedin && (
-                      <a href={hero?.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
+                      <a href={hero?.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 dark:bg-neutral-800 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
                         <Linkedin className="w-5 h-5" />
                       </a>
                     )}
-                    {hero?.socialLinks?.twitter && (
-                      <a href={hero?.socialLinks?.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
+                    {hero?.socialLinks?.x && (
+                      <a href={hero?.socialLinks?.x} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 dark:bg-neutral-800 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors">
                         <Twitter className="w-5 h-5" />
                       </a>
                     )}
