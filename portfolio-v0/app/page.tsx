@@ -192,39 +192,39 @@ export default function HomePage() {
                 <Button variant="outline" asChild>
                   <Link href="/contact">Get In Touch</Link>
                 </Button>
-                {hero?.resume?.url && (
-                  <Button variant="outline" asChild>
-                    <a
-                      href="/api/resume"
-                      download="sachin-kathar-resume.pdf"
-                      className="flex items-center"
-                      onClick={() => {
-                        // Provide quick UI feedback; do not block default download
-                        setDownloading(true)
-                        setTimeout(() => setDownloading(false), 4000)
-                      }}
-                    >
-                      {downloading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Downloading...
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-4 h-4 mr-2" />
-                          Resume
-                        </>
-                      )}
-                    </a>
-                  </Button>
-                )}
+                <Button variant="outline" asChild>
+                  <a
+                    href={"/" + encodeURI("SACHIN KATHAR - Full Stack Devloper Resume (1).pdf")}
+                    download={"Sachin-Kathar-Resume.pdf"}
+                    className="flex items-center"
+                    onClick={() => {
+                      // Provide quick UI feedback; do not block default download
+                      setDownloading(true)
+                      setTimeout(() => setDownloading(false), 4000)
+                    }}
+                  >
+                    {downloading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Downloading...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4 mr-2" />
+                        Resume
+                      </>
+                    )}
+                  </a>
+                </Button>
               </div>
 
               {/* Social links on the right removed as requested; kept only under the photo */}
 
-              <div className="mt-6">
-                <InlineMusic />
-              </div>
+              {hero?.musicEnabled && (
+                <div className="mt-6">
+                  <InlineMusic />
+                </div>
+              )}
             </motion.div>
           </div>
         </div>

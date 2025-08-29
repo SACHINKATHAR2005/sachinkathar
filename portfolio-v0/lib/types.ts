@@ -59,6 +59,7 @@ export interface Hero {
     x?: string;
     instagram?: string;
   };
+  musicEnabled?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

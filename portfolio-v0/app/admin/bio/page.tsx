@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Upload, Loader2 } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
 import Image from 'next/image'
 import { api } from '@/lib/api-client'
 import { EducationEntry, Hero } from '@/lib/types'
@@ -31,6 +32,7 @@ export default function AdminBioPage() {
   const [educations, setEducations] = useState<EducationEntry[]>([])
   const [savingEdu, setSavingEdu] = useState(false)
   const [eduUploading, setEduUploading] = useState<Record<number, boolean>>({})
+  const [musicEnabled, setMusicEnabled] = useState<boolean>(false)
 
   useEffect(() => {
     fetchBio()
@@ -38,10 +40,11 @@ export default function AdminBioPage() {
 
   const fetchBio = async () => {
     try {
-      const res = await api.hero.getAll()
-      const list: Hero[] = res.data?.Heros || res.data?.data || []
+      const res = await api.hero.getLatest()
+      const current: Hero | null = res.data?.data || null
+      const list: Hero[] = current ? [current] : []
       setBios(list)
-      if (list.length > 0) fillForm(list[0])
+      if (current) fillForm(current)
     } catch {
       toast.error('Failed to fetch bio')
     } finally {
@@ -112,6 +115,7 @@ export default function AdminBioPage() {
       email: h.socialLinks?.email || '',
     })
     setEducations(h.educations || [])
+    setMusicEnabled(!!h.musicEnabled)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -135,6 +139,8 @@ export default function AdminBioPage() {
       if (formData.linkedin) fd.append('linkedin', formData.linkedin)
       if (formData.email) fd.append('email', formData.email)
       if (imageFile) fd.append('file', imageFile)
+      // feature flags
+      fd.append('musicEnabled', String(!!musicEnabled))
 
       if (editing) {
         await api.hero.upload(editing._id, fd)
@@ -232,6 +238,17 @@ export default function AdminBioPage() {
                     <label className="block text-sm font-medium mb-2">Location</label>
                     <Input name="location" value={formData.location} onChange={handleChange} />
                   </div>
+                </div>
+                <div className="flex items-center justify-between rounded-md border p-3">
+                  <div>
+                    <p className="text-sm font-medium">Inline Music</p>
+                    <p className="text-xs text-gray-500">Toggle to show/hide the music widget on the homepage.</p>
+                  </div>
+                  <Switch
+                    checked={musicEnabled}
+                    onCheckedChange={setMusicEnabled}
+                    className="border-black data-[state=checked]:bg-black data-[state=unchecked]:bg-transparent"
+                  />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>

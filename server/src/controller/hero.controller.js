@@ -15,6 +15,9 @@ export const addHero = async (req, res) => {
       socialLinks,
     } = req.body;
 
+    // Coerce boolean from form-data/string
+    const musicEnabled = req.body.musicEnabled === 'true' || req.body.musicEnabled === true;
+
     const resume = {
       url: req.file?.path,
       publicId: req.file?.filename,
@@ -47,6 +50,7 @@ export const addHero = async (req, res) => {
       profileImage,
       location,
       socialLinks,
+      musicEnabled,
     });
 
     await hero.save();
@@ -118,7 +122,7 @@ export const downloadResume = async (req, res) => {
       return res.status(404).json({ message: "Resume not found", success: false });
     }
     const filename = `${hero?.name || 'resume'}.pdf`;
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Disposition', `attachment; filename=\"${filename}\"`);
     res.setHeader('Content-Type', 'application/pdf');
     const response = await axios.get(resumeUrl, { responseType: 'stream' });
     response.data.pipe(res);
@@ -149,6 +153,11 @@ export const updateHero = async (req, res) => {
     if (profileImage !== undefined) updateData.profileImage = profileImage;
     if (location !== undefined) updateData.location = location;
     if (socialLinks !== undefined) updateData.socialLinks = socialLinks;
+
+    // Feature flags
+    if (req.body.musicEnabled !== undefined) {
+      updateData.musicEnabled = (req.body.musicEnabled === 'true' || req.body.musicEnabled === true);
+    }
 
     // Parse structured educations if provided (stringified JSON allowed)
     if (req.body.educations !== undefined) {

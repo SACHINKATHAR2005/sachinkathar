@@ -52,6 +52,8 @@ const heroSchema = new mongoose.Schema({
     portfolio: { type: String },
     email:{type: String }
   },
+  // Feature flags
+  musicEnabled: { type: Boolean, default: false },
 }, {
   timestamps: true
 });
