@@ -54,7 +54,12 @@ app.use("/upload", uploadRouter)
 
 connectDB();
 
+<<<<<<< HEAD
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+=======
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+>>>>>>> a46c910f76d57931b7a7604c481cb6d1e2b9fecc
 });
