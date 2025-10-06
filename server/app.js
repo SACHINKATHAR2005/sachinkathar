@@ -2,7 +2,7 @@ import express from "express";
 import connectDB from "./src/db/index.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import cors from "cors"; // ✅ Import CORS
+import cors from "cors";
 
 dotenv.config();
 
@@ -12,11 +12,11 @@ import skillRouter from "./src/router/skillRoutesr.js";
 import projectRouter from "./src/router/projectRouter.js";
 import certificateRouter from "./src/router/certificateRouter.js";
 import blogRouter from "./src/router/blogRouter.js";
-import leetCodeRouter from "./src/router/leetcode.route.js"
-import contactRouter from "./src/router/contect.router.js"
-import uploadRouter from "./src/router/upload.router.js"
-const app = express();
+import leetCodeRouter from "./src/router/leetcode.route.js";
+import contactRouter from "./src/router/contect.router.js";
+import uploadRouter from "./src/router/upload.router.js";
 
+const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -28,7 +28,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -43,24 +42,33 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
+// Health check route for Render
+app.get("/", (req, res) => res.send("Server is live!"));
+
+// Routers
 app.use("/user", userRouter);
 app.use("/hero", heroRouter);   
-app.use("/skill",skillRouter);
-app.use("/project",projectRouter);
-app.use("/certificate",certificateRouter);
-app.use("/blog",blogRouter);
-app.use("/dsa",leetCodeRouter)
-app.use("/contact", contactRouter)
-app.use("/upload", uploadRouter)
+app.use("/skill", skillRouter);
+app.use("/project", projectRouter);
+app.use("/certificate", certificateRouter);
+app.use("/blog", blogRouter);
+app.use("/dsa", leetCodeRouter);
+app.use("/contact", contactRouter);
+app.use("/upload", uploadRouter);
 
-
-connectDB();
-
-
+// Start server only after DB is connected
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log("Database connected successfully");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to connect to DB", err);
+  }
+};
 
-
-})
+startServer();
