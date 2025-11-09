@@ -58,7 +58,7 @@ export default function HomePage() {
       const link = document.createElement('a');
       link.href = url;
       link.target = '_blank';
-      link.download = 'sachin-kathar-resume.pdf'; // Set a proper file name
+      link.download = 'Sachin_Kathar.pdf'; // Set a proper file name
       link.rel = 'noopener noreferrer';
       
       // Simulate click
@@ -72,7 +72,7 @@ export default function HomePage() {
     }
   };
 
-  const toAttachmentUrl = (url: string, filename = 'sachin-kathar-resume.pdf') => {
+  const toAttachmentUrl = (url: string, filename = 'Sachin_Kathar.pdf') => {
     try {
       let u = url
       // If it's a PDF but delivered via image, switch to raw delivery
@@ -194,8 +194,8 @@ export default function HomePage() {
                 </Button>
                 <Button variant="outline" asChild>
                   <a
-                    href={"/" + encodeURI("SACHIN KATHAR - Full Stack Devloper Resume (1).pdf")}
-                    download={"Sachin-Kathar-Resume.pdf"}
+                    href={"/" + encodeURI("Sachin_Kathar.pdf")}
+                    download={"Sachin_Kathar.pdf"}
                     className="flex items-center"
                     onClick={() => {
                       // Provide quick UI feedback; do not block default download
